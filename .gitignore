@@ -1,0 +1,11 @@
+# python
+.venv/
+__pycache__/
+*.pyc 
+.env
+
+#node/react
+node_modules/
+dist/
+build/
+
