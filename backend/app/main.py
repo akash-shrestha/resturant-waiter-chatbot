@@ -12,7 +12,7 @@ def greet():
 
 @app.post("/chat")
 def LLMChat(request: ChatRequest):
-    time.sleep(5)
+    time.sleep(5)  # this is blocking approach
     print(request.message)
     reply = f"Hi you sent this message:  {request.message}"
     return reply
