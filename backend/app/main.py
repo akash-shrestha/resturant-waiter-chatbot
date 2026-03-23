@@ -13,7 +13,7 @@ def greet():
     return "Welcome from fastapi"
 
 @app.post("/chat")
-def LLMChat(request: ChatRequest):
+def llm_chat(request: ChatRequest):
     # time.sleep(5)  # this is blocking approach
     # print(request.message)
     # print(request.message)
