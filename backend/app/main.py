@@ -1,12 +1,9 @@
 # import time
 from fastapi import FastAPI
-from pydantic import BaseModel
 from app.ai_service import ask_ai
+from app.models import ChatRequest
 
 app = FastAPI()
-
-class ChatRequest(BaseModel):
-    message: str
 
 @app.get("/")
 def greet():
