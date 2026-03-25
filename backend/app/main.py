@@ -24,7 +24,11 @@ def greet():
 
 @app.get("/chat", response_model=list[ChatResponse])
 def get_chat(db: Session = Depends(get_db)):
-    db_chat = db.query(database_models.Chat).all()
+    db_chat = db.query(
+        database_models.Chat.id,
+        database_models.Chat.role,
+        database_models.Chat.content
+        ).all()
     response: list[ChatResponse] = []
     for message in db_chat:
         response.append(
