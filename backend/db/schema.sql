@@ -1,6 +1,6 @@
 create extension if not exists pgcrypto;
 create table messages (
-id uuid primary key default gen_random_uuid(),
+id uuid primary key default,
 conversation_id uuid,
 role text check (role in ('user', 'assistant', 'system')),
 content text not null,
