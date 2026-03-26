@@ -45,10 +45,18 @@ def llm_chat(request: ChatRequest, db: Session = Depends(get_db)):
     # print(request.message)
     # print(request.message)
     # print(ask_ai("hi"))
-    new_user_message = database_models.Chat(role="user", content=request.message)
+    new_user_message = database_models.Chat(
+        conversation_id="3f7a9c2e-6b4d-4d91-9f3c-8a2e5b7d1c4f",
+        role="user",
+        content=request.message,
+    )
     db.add(new_user_message)
     ai_response = ask_ai(request.message)
-    new_ai_message = database_models.Chat(role="assistant", content=ai_response)
+    new_ai_message = database_models.Chat(
+        conversation_id="3f7a9c2e-6b4d-4d91-9f3c-8a2e5b7d1c4f",
+        role="assistant",
+        content=ai_response,
+    )
     db.add(new_ai_message)
     db.commit()
     reply = f" {ai_response}"
