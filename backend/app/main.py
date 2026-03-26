@@ -42,11 +42,18 @@ def get_chat(db: Session = Depends(get_db)):
     return response
 
 @app.post("/chat")
-def llm_chat(request: ChatRequest):
+def llm_chat(request: ChatRequest, db: Session = Depends(get_db)):
     # time.sleep(5)  # this is blocking approach
     # print(request.message)
     # print(request.message)
     # print(ask_ai("hi"))
+    new_user_message = database_models.Chat(
+        role="user",
+        content=request.message
+        )
+    db.add(new_user_message)
+    db.commit()
+    db.refresh(new_user_message)
     ai_response  = ask_ai(request.message)
     reply = f" {ai_response}"
 
