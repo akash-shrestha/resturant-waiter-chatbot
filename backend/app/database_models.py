@@ -1,7 +1,7 @@
 import uuid
 
 from app.database import Base
-from sqlalchemy import Column, DateTime, Enum, Text
+from sqlalchemy import Column, DateTime, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.sql import func
 
