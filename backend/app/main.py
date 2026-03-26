@@ -52,9 +52,13 @@ def llm_chat(request: ChatRequest, db: Session = Depends(get_db)):
         content=request.message
         )
     db.add(new_user_message)
-    db.commit()
-    db.refresh(new_user_message)
     ai_response  = ask_ai(request.message)
+    new_ai_message = database_models.Chat(
+        role = "assistant",
+        content=ai_response
+    )
+    db.add(new_ai_message)
+    db.commit()
     reply = f" {ai_response}"
 
     return reply
