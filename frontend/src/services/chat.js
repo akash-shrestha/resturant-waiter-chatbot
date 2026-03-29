@@ -28,3 +28,14 @@ export async function sendChatMessage(message) {
 
   return body;
 }
+
+export async function getChatHistory() {
+  const response = await fetch('/chat');
+  const body = await response.json();
+
+  if (!response.ok) { 
+    throw new Error('Failed to load chat history')
+  }
+
+  return body
+}

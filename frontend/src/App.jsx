@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { sendChatMessage } from './services/chat';
+import { sendChatMessage, getChatHistory } from './services/chat';
 
 const HEADER_HELPER = 'Ask for ingredients, availability, or confirm your order.';
 
@@ -9,6 +9,30 @@ function App() {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
+  const loadChatHIstory = useCallback(async () => {
+    setIsTyping(true);
+    try {
+      const history = await getChatHistory();
+      const normalized = history.map(msg => ({
+        id: msg.id,
+        role: msg.role === 'assistant' ? 'bot' : 'user',
+        text: msg.content,
+      }))
+      console.log(normalized)
+      setMessages(normalized);
+    } catch (error) {
+      console.error(error);
+      setMessages([]);
+    } finally {
+      setIsTyping(false);
+    }
+  }, []
+  );
+
+  useEffect(() => { 
+    loadChatHIstory();
+  }, [loadChatHIstory])
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
@@ -17,28 +41,28 @@ function App() {
     setMessages((prev) => [...prev, message]);
   }, []);
 
-  const fetchInitialMenu = useCallback(async () => {
-    setIsTyping(true);
-    try {
-      const reply = await sendChatMessage('show menu');
-      console.log("reply", reply)
-      setMessages([{ role: 'bot', text: reply }]);
-    } catch (error) {
-      console.error(error);
-      setMessages([
-        {
-          role: 'bot',
-          text: 'I could not load the menu right now. Please try again in a moment.'
-        }
-      ]);
-    } finally {
-      setIsTyping(false);
-    }
-  }, []);
+  // const fetchInitialMenu = useCallback(async () => {
+  //   setIsTyping(true);
+  //   try {
+  //     const reply = await sendChatMessage('show menu');
+  //     console.log("reply", reply)
+  //     setMessages([{ role: 'bot', text: reply }]);
+  //   } catch (error) {
+  //     console.error(error);
+  //     setMessages([
+  //       {
+  //         role: 'bot',
+  //         text: 'I could not load the menu right now. Please try again in a moment.'
+  //       }
+  //     ]);
+  //   } finally {
+  //     setIsTyping(false);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    fetchInitialMenu();
-  }, [fetchInitialMenu]);
+  // useEffect(() => {
+  //   fetchInitialMenu();
+  // }, [fetchInitialMenu]);
 
   const handleBotReply = useCallback(
     async (prompt) => {
