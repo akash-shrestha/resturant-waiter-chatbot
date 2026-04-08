@@ -18,7 +18,6 @@ function App() {
         role: msg.role === 'assistant' ? 'bot' : 'user',
         text: msg.content,
       }))
-      console.log(normalized)
       setMessages(normalized);
     } catch (error) {
       console.error(error);
