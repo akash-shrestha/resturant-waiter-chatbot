@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { sendChatMessage, getChatHistory } from './services/chat';
+import { sendChatMessage, getChatHistory, clearChatHistory } from './services/chat';
 
 const HEADER_HELPER = 'Ask for ingredients, availability, or confirm your order.';
 
@@ -7,6 +7,7 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
   const messagesEndRef = useRef(null);
 
   const loadChatHIstory = useCallback(async () => {
@@ -91,6 +92,23 @@ function App() {
     handleBotReply(trimmed);
   };
 
+  const handleClearChat = async () => {
+    const confirmed = window.confirm(
+      'Clear this chat? This will delete the saved history and cannot be undone.'
+    );
+    if (!confirmed || isClearing) return;
+    setIsClearing(true);
+    try {
+      await clearChatHistory();
+      setMessages([])
+    } catch (error) {
+      console.log(error);
+      alert('Could not clear chat history. Please try again later.');
+    } finally {
+      setIsClearing(false)
+    }
+  }
+
   return (
     <div className="app-shell">
       <section className="chat-panel">
@@ -99,7 +117,17 @@ function App() {
             <p className="eyebrow">Chat</p>
             <h1>Talk to Cheffy</h1>
           </div>
-          <p className="header-meta">{HEADER_HELPER}</p>
+          <div className='header-actions'>
+            <p className='header-meta'>{HEADER_HELPER}</p>
+            <button
+              type='button'
+              className='clear-chat-button'
+              onClick={handleClearChat}
+              disabled={isTyping || isClearing || messages.length === 0}
+            >
+            {isClearing ? 'Clearing...' : 'Clear chat'}
+            </button>
+          </div>
         </header>
         <div className="message-list">
           {messages.map((message, index) => (

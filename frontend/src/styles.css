@@ -135,6 +135,29 @@ body {
   cursor: not-allowed;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.clear-chat-button {
+  border: 1px solid rgba(255, 90, 90, 0.35);
+  background: transparent;
+  color: #ff6b6b;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.9 rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.clear-chat-button:hover:not(:disabled) {
+  background: rgba(255, 90, 90, 0.12);
+  border-color: rgba(255, 90, 90, 0.6);
+  transform: translateY(-1px);
+}
+
 @media (max-width: 720px) {
   .app-shell {
     padding: 1rem;

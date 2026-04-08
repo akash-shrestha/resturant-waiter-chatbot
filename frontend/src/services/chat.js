@@ -39,3 +39,16 @@ export async function getChatHistory() {
 
   return body
 }
+
+export async function clearChatHistory(params) {
+  const response = await fetch('/chat', {
+    method: 'DELETE'
+  });
+
+  const body = await parseResponseBody(response);
+  if (!response.ok) {
+    throw new Error(body || 'Failed to clear chat history');
+  }
+
+  return body;
+}
