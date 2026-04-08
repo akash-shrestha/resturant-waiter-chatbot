@@ -51,7 +51,12 @@ def llm_chat(request: ChatRequest, db: Session = Depends(get_db)):
         content=request.message,
     )
     db.add(new_user_message)
-    ai_response = ask_ai(request.message)
+    db.commit()
+    db_chat = db.query(database_models.Chat.role, database_models.Chat.content).all()
+    chat_json = []
+    for message in db_chat:
+        chat_json.append({"role": message.role, "content": message.content})
+    ai_response = ask_ai(chat_json)
     new_ai_message = database_models.Chat(
         conversation_id="3f7a9c2e-6b4d-4d91-9f3c-8a2e5b7d1c4f",
         role="assistant",
