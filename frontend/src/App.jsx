@@ -8,6 +8,7 @@ function App() {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
+  const [historyError, setHistoryError] = useState('');
   const messagesEndRef = useRef(null);
 
   const loadChatHIstory = useCallback(async () => {
@@ -23,6 +24,7 @@ function App() {
     } catch (error) {
       console.error(error);
       setMessages([]);
+      setHistoryError('Could not load chat history. Please refresh the page to try again.');
     } finally {
       setIsTyping(false);
     }
@@ -129,6 +131,9 @@ function App() {
             </button>
           </div>
         </header>
+        {historyError && (
+          <p className='error-message'>{historyError}</p>
+        )}
         <div className="message-list">
           {messages.map((message, index) => (
             <div key={index} className={`message ${message.role}`}>
