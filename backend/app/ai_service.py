@@ -41,9 +41,6 @@ Drinks:
 
 
 def ask_ai(chat_history):
-    message = [{"role": "system", "content": SYSTEM_PROMPT}, chat_history]
-    print("message!!!!!!!!!!!!!")
-    print(message)
     response = client.chat.completions.create(
         model="openai/gpt-oss-120b",
         messages=[{"role": "system", "content": SYSTEM_PROMPT}] + chat_history,
