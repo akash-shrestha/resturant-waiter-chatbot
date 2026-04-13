@@ -72,7 +72,6 @@ def llm_chat(request: ChatRequest, db: Session = Depends(get_db)):
 @app.delete("/chat")
 def delete_chat(db: Session = Depends(get_db)):
     deleted_count = db.query(database_models.Chat).delete()
-    print(deleted_count)
     db.commit()
     response = f"deleted {deleted_count} messages successfully"
 
