@@ -101,8 +101,9 @@ function App() {
     if (!confirmed || isClearing) return;
     setIsClearing(true);
     try {
-      await clearChatHistory();
-      setMessages([])
+      const response = await clearChatHistory();
+      alert(response)
+      loadChatHIstory();
     } catch (error) {
       console.log(error);
       alert('Could not clear chat history. Please try again later.');
