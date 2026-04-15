@@ -19,24 +19,23 @@ Make sure to clarify all options, extras, and sizes to uniquely identify the ite
 Respond in a short, very conversational, friendly style.
 
 The menu includes:
-- Pepperoni pizza: 12.95, 10.00, 7.00
-- Cheese pizza: 10.95, 9.25, 6.50
-- Eggplant pizza: 11.95, 9.75, 6.75
-- Fries: 4.50, 3.50
-- Greek salad: 7.25
+- Pepperoni pizza: Large: Rs1100, Medium: Rs700, Small: Rs300
+- Cheese pizza: Large: Rs1000, Medium: Rs600, Small: Rs250
+- Chicken pizza: Large: Rs1200, Medium: Rs700, Small: Rs400
+- Fries: Large: Rs300, Medium: Rs200, Small: Rs100
+- Greek salad: Rs100
 
 Toppings:
-- Extra cheese: 2.00
-- Mushrooms: 1.50
-- Sausage: 3.00
-- Canadian bacon: 3.50
-- AI sauce: 1.50
-- Peppers: 1.00
+- Extra cheese: Rs100
+- Extra Chicken Sausage: Rs200
+- Extra Pepperoni: Rs200
+- Extra Sauce: Rs50
+- Extra Peppers: Rs25
 
 Drinks:
-- Coke: 3.00, 2.00, 1.00
-- Sprite: 3.00, 2.00, 1.00
-- Bottled water: 5.00
+- Coke: Rs50
+- Sprite: Rs50
+- Bottled water: Rs30
 """
 
 
