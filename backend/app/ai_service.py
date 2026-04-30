@@ -1,3 +1,4 @@
+import json
 import os
 
 from dotenv import load_dotenv
@@ -42,35 +43,42 @@ You must respond with valid JSON only.
 {
   "user_reply": "string",
   "order_status": {
-    "orderId": "string",
-    "items": [],
+    "order_id": "order_001",
+    "order_items": [],
     "customer": {
       "name": "",
-      "phone": ""
-    },
-    "delivery": {
+      "phone": "",
       "address": "",
       "notes": ""
     },
-    "status": "pending",
-    "totalAmount": 0,
-    "createdAt": "ISO-8601 string"
+    "status": "",
+    "total_amount": ,
+    "created_at": "ISO-8601 string"
   }
 }
 
 Rules:
 - Do not output anything outside JSON.
 - Keep `order_status` updated on every message.
+- Current order status will be provided as user message at last of each prompt, don't treat it as user message
 - If the order is incomplete, ask a short question in `user_reply`.
 - Use only menu items, sizes, toppings, and drinks from the menu.
 - Keep prices consistent with the menu.
 """
 
 
-def ask_ai(chat_history):
+def ask_ai(chat_history, existing_order):
     response = client.chat.completions.create(
         model="openai/gpt-oss-120b",
-        messages=[{"role": "system", "content": SYSTEM_PROMPT}] + chat_history,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            # * unpack each items from the list, as chat_history is a list
+            *chat_history,
+            {"role": "user", "content": f"Current order status: {existing_order}"},
+        ],
     )
+    # converting response in string to dict
+    reply = json.loads(response.choices[0].message.content)
+    print(reply["order_status"])
 
-    return response.choices[0].message.content
+    return reply
