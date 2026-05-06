@@ -53,6 +53,8 @@ def llm_chat(request: ChatRequest, db: Session = Depends(get_db)):
     )
     db.add(new_user_message)
     db.commit()
+    # db.query(...) = build the query
+    #  .all() / .first() / .one() = execute and fetch results
     db_chat = db.query(database_models.Chat.role, database_models.Chat.content).all()
     chat_json = []
     for message in db_chat:
@@ -102,3 +104,21 @@ def delete_chat(db: Session = Depends(get_db)):
     response = f"deleted {messages_deleted_count} messages & order details successfully"
 
     return response
+
+
+@app.get("/order")
+def get_order(db: Session = Depends(get_db)):
+    order = db.query(database_models.Orders).first()
+
+    if not order:
+        return "Order not created yet"
+
+    # convert to python dict from sql alchemy orm object
+    return {
+        "order_id": order.order_id,
+        "status": order.status,
+        "created_at": order.created_at.isoformat() if order.created_at else None,
+        "total_amount": str(order.total_amount),
+        "customer": order.customer,
+        "order_items": order.order_items,
+    }

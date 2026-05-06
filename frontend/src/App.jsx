@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { sendChatMessage, getChatHistory, clearChatHistory } from './services/chat';
+import { sendChatMessage, getChatHistory, clearChatHistory, getOrder } from './services/chat';
 
 const HEADER_HELPER = 'Ask for ingredients, availability, or confirm your order.';
 
@@ -112,6 +112,16 @@ function App() {
     }
   }
 
+  const handleShowOrder = async () => {
+    try {
+      const response = await getOrder();
+      alert(JSON.stringify(response, null, 2));
+    } catch (error) {
+      console.log(error);
+      alert('Could not load order details. Please try again later.')
+    } 
+  }
+
   return (
     <div className="app-shell">
       <section className="chat-panel">
@@ -129,6 +139,13 @@ function App() {
               disabled={isTyping || isClearing || messages.length === 0}
             >
             {isClearing ? 'Clearing...' : 'Clear chat'}
+            </button>
+            <button
+              type='button'
+              onClick={handleShowOrder}
+              className='show-order-button'
+            >
+              Show order
             </button>
           </div>
         </header>

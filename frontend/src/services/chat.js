@@ -1,3 +1,4 @@
+// handle responses that are not always in the exact same format.
 async function parseResponseBody(response) {
   const raw = await response.text();
   if (!raw) return '';
@@ -51,4 +52,15 @@ export async function clearChatHistory(params) {
   }
 
   return body;
+}
+
+export async function getOrder() {
+  const response = await fetch('/order')
+  const body = await response.json();
+
+  if (!response.ok) {
+    throw new Error('Failed to load chat history')
+  }
+
+  return body
 }
