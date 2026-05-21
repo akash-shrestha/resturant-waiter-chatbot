@@ -135,6 +135,12 @@ body {
   cursor: not-allowed;
 }
 
+.header-cover {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
@@ -147,7 +153,7 @@ body {
   color: #ff6b6b;
   padding: 8px 12px;
   border-radius: 999px;
-  font-size: 0.9 rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
@@ -185,6 +191,20 @@ body {
 }
 
 .show-order-button:hover {
+  transform: translateY(-1px)
+}
+
+.confirm-order-button {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgb(125, 125, 232);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.confirm-order-button:hover {
   transform: translateY(-1px)
 }
 

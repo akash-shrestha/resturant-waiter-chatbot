@@ -122,6 +122,22 @@ function App() {
     } 
   }
 
+  const handleConfirmOrder = async () => {
+    try {
+      const response = await getOrder();
+      if (response.status === "ready_for_confirmation") {
+          alert("Order confirmed!");
+      }
+      else {
+        alert("Please provide the required details for order completion and proceed")
+      }
+    }
+    catch (error) {
+      console.log(error)
+      alert('Could not confirm order. Please try again later')
+    }
+  }
+
   return (
     <div className="app-shell">
       <section className="chat-panel">
@@ -130,6 +146,7 @@ function App() {
             <p className="eyebrow">Chat</p>
             <h1>Talk to Cheffy</h1>
           </div>
+          <div className='header-cover'>
           <div className='header-actions'>
             <p className='header-meta'>{HEADER_HELPER}</p>
             <button
@@ -146,6 +163,14 @@ function App() {
               className='show-order-button'
             >
               Show order
+            </button>
+            </div>
+            <button
+              type='button'
+              onClick={handleConfirmOrder}
+              className='confirm-order-button'
+            >
+              Confirm order
             </button>
           </div>
         </header>
