@@ -1,7 +1,7 @@
 # import time
 from app import database_models
 from app.ai_service import ask_ai
-from app.database import SessionLocal
+from app.database import SessionLocal, engine
 from app.models import ChatRequest, ChatResponse
 from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
@@ -10,6 +10,11 @@ app = FastAPI()
 
 # inspect all models and create the corresponding tables in db that do no exist
 # database_models.Base.metadata.create_all(bind=engine)
+
+
+@app.on_event("startup")
+def create_tables() -> None:
+    database_models.Base.metadata.create_all(bind=engine)
 
 
 def get_db():
