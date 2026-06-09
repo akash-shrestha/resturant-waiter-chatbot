@@ -5,15 +5,5 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: '0.0.0.0',
-    proxy: {
-      '/chat': {
-        target: process.env.VITE_API_PROXY_TARGET || 'http://127.0.0.1:8000',
-        changeOrigin: true
-      },
-      '/order': {
-        target: process.env.VITE_API_PROXY_TARGET || 'http://127.0.0.1:8000',
-        changeOrigin: true
-      }
-    }
   }
 });

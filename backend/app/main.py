@@ -4,12 +4,23 @@ from app.ai_service import ask_ai
 from app.database import SessionLocal, engine
 from app.models import ChatRequest, ChatResponse
 from fastapi import Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 app = FastAPI()
 
 # inspect all models and create the corresponding tables in db that do no exist
 # database_models.Base.metadata.create_all(bind=engine)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.on_event("startup")

@@ -13,7 +13,7 @@ async function parseResponseBody(response) {
 }
 
 export async function sendChatMessage(message) {
-  const url = `/chat`;
+  const url = `${import.meta.env.VITE_API_URL}/chat`;
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -31,7 +31,7 @@ export async function sendChatMessage(message) {
 }
 
 export async function getChatHistory() {
-  const response = await fetch('/chat');
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/chat`);
   const body = await response.json();
 
   if (!response.ok) { 
@@ -42,7 +42,7 @@ export async function getChatHistory() {
 }
 
 export async function clearChatHistory(params) {
-  const response = await fetch('/chat', {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
     method: 'DELETE'
   });
 
@@ -55,7 +55,7 @@ export async function clearChatHistory(params) {
 }
 
 export async function getOrder() {
-  const response = await fetch('/order')
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/order`)
   const body = await response.json();
 
   if (!response.ok) {
