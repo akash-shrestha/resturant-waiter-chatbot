@@ -16,7 +16,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://resturant-waiter-chatbot-1.onrender.com/",
+        "https://resturant-waiter-chatbot-1.onrender.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
