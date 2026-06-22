@@ -144,7 +144,7 @@ function App() {
         <header>
           <div>
             <p className="eyebrow">Chat</p>
-            <h1>Talk to Cheffy</h1>
+            <h1>Talk to Gita</h1>
           </div>
           <div className='header-cover'>
           <div className='header-actions'>
@@ -180,19 +180,19 @@ function App() {
         <div className="message-list">
           {messages.map((message, index) => (
             <div key={index} className={`message ${message.role}`}>
-              <span className="sender">{message.role === 'bot' ? 'Cheffy' : 'You'}</span>
+              <span className="sender">{message.role === 'bot' ? 'Gita' : 'You'}</span>
               <p>{message.text}</p>
             </div>
           ))}
           {messages.length === 0 && isTyping && (
             <div className="message bot typing">
-              <span className="sender">Cheffy</span>
+              <span className="sender">Gita</span>
               <p>Loading today’s menu…</p>
             </div>
           )}
           {isTyping && messages.length > 0 && (
             <div className="message bot typing">
-              <span className="sender">Cheffy</span>
+              <span className="sender">Gita</span>
               <p>Thinking...</p>
             </div>
           )}
