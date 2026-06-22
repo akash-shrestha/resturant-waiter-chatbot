@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { sendChatMessage, getChatHistory, clearChatHistory, getOrder } from './services/chat';
 
-const HEADER_HELPER = 'Ask for ingredients, availability, or confirm your order.';
+const HEADER_HELPER = 'Ask for menu, select your items or confirm your order.';
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -144,7 +144,7 @@ function App() {
         <header>
           <div>
             <p className="eyebrow">Chat</p>
-            <h1>Talk to Gita</h1>
+            <h1>Talk to Gita 💁‍♀️</h1>
           </div>
           <div className='header-cover'>
           <div className='header-actions'>
