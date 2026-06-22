@@ -3,12 +3,104 @@ import { sendChatMessage, getChatHistory, clearChatHistory, getOrder } from './s
 
 const HEADER_HELPER = 'Ask for menu, select your items or confirm your order.';
 
+const formatOrderLabel = (key) =>
+  key
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+const formatOrderValue = (value) => {
+  if (value === null || value === undefined || value === '') return 'Not provided';
+  if (typeof value === 'object') return JSON.stringify(value);
+  return String(value);
+};
+
+function OrderDetails({ order }) {
+  if (!order) {
+    return <p className="order-empty">No order details available yet.</p>;
+  }
+
+  if (typeof order === 'string') {
+    return <p className="order-empty">{order}</p>;
+  }
+
+  const customerEntries = order.customer && typeof order.customer === 'object'
+    ? Object.entries(order.customer)
+    : [];
+  const orderItems = Array.isArray(order.order_items) ? order.order_items : [];
+
+  return (
+    <>
+      <div className="order-summary-grid">
+        <div>
+          <span>Order ID</span>
+          <strong>{order.order_id || 'Not created'}</strong>
+        </div>
+        <div>
+          <span>Status</span>
+          <strong>{order.status || 'Not started'}</strong>
+        </div>
+        <div>
+          <span>Total</span>
+          <strong>{order.total_amount ? `Rs. ${order.total_amount}` : 'Not calculated'}</strong>
+        </div>
+      </div>
+
+      <div className="order-modal-section">
+        <h3>Customer</h3>
+        {customerEntries.length > 0 ? (
+          <dl className="order-detail-list">
+            {customerEntries.map(([key, value]) => (
+              <div key={key}>
+                <dt>{formatOrderLabel(key)}</dt>
+                <dd>{formatOrderValue(value)}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <p className="order-empty">Customer details not provided yet.</p>
+        )}
+      </div>
+
+      <div className="order-modal-section">
+        <h3>Items</h3>
+        {orderItems.length > 0 ? (
+          <ul className="order-item-list">
+            {orderItems.map((item, index) => (
+              <li key={`${item && typeof item === 'object' && item.name ? item.name : 'item'}-${index}`}>
+                {item && typeof item === 'object' ? (
+                  <>
+                    <strong>{item.name || `Item ${index + 1}`}</strong>
+                    <span>
+                      {Object.entries(item)
+                        .filter(([key]) => key !== 'name')
+                        .map(([key, value]) => `${formatOrderLabel(key)}: ${formatOrderValue(value)}`)
+                        .join(' • ')}
+                    </span>
+                  </>
+                ) : (
+                  <strong>{item}</strong>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="order-empty">No items selected yet.</p>
+        )}
+      </div>
+    </>
+  );
+}
+
 function App() {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
   const [historyError, setHistoryError] = useState('');
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [isOrderLoading, setIsOrderLoading] = useState(false);
+  const [orderDetails, setOrderDetails] = useState(null);
+  const [orderError, setOrderError] = useState('');
   const messagesEndRef = useRef(null);
 
   const loadChatHIstory = useCallback(async () => {
@@ -113,13 +205,19 @@ function App() {
   }
 
   const handleShowOrder = async () => {
+    setIsOrderModalOpen(true);
+    setIsOrderLoading(true);
+    setOrderError('');
     try {
       const response = await getOrder();
-      alert(JSON.stringify(response, null, 2));
+      setOrderDetails(response);
     } catch (error) {
       console.log(error);
-      alert('Could not load order details. Please try again later.')
-    } 
+      setOrderDetails(null);
+      setOrderError('Could not load order details. Please try again later.');
+    } finally {
+      setIsOrderLoading(false);
+    }
   }
 
   const handleConfirmOrder = async () => {
@@ -161,8 +259,9 @@ function App() {
               type='button'
               onClick={handleShowOrder}
               className='show-order-button'
+              disabled={isOrderLoading}
             >
-              Show order
+              {isOrderLoading ? 'Loading...' : 'Show order'}
             </button>
             </div>
             <button
@@ -210,6 +309,45 @@ function App() {
           </button>
         </form>
       </section>
+      {isOrderModalOpen && (
+        <div
+          className="modal-backdrop"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              setIsOrderModalOpen(false);
+            }
+          }}
+        >
+          <section
+            className="order-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="order-modal-title"
+          >
+            <div className="order-modal-header">
+              <div>
+                <p className="eyebrow">Current order</p>
+                <h2 id="order-modal-title">Order details</h2>
+              </div>
+              <button
+                type="button"
+                className="modal-close-button"
+                onClick={() => setIsOrderModalOpen(false)}
+                aria-label="Close order details"
+              >
+                ×
+              </button>
+            </div>
+            <div className="order-modal-body">
+              {isOrderLoading && <p className="order-empty">Loading order details...</p>}
+              {!isOrderLoading && orderError && (
+                <p className="order-modal-error">{orderError}</p>
+              )}
+              {!isOrderLoading && !orderError && <OrderDetails order={orderDetails} />}
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 }
