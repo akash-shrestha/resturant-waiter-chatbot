@@ -202,7 +202,7 @@ function App() {
           <input
             value={inputValue}
             onChange={(event) => setInputValue(event.target.value)}
-            placeholder="Type a question or request..."
+            placeholder="Chat..."
             disabled={isTyping}
           />
           <button type="submit" disabled={isTyping || !inputValue.trim()}>
