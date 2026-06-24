@@ -97,6 +97,8 @@ function App() {
   const [isTyping, setIsTyping] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
   const [historyError, setHistoryError] = useState('');
+  const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
+  const [clearError, setClearError] = useState('');
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [isOrderLoading, setIsOrderLoading] = useState(false);
   const [orderDetails, setOrderDetails] = useState(null);
@@ -186,19 +188,22 @@ function App() {
     handleBotReply(trimmed);
   };
 
-  const handleClearChat = async () => {
-    const confirmed = window.confirm(
-      'Clear this chat? This will delete the saved history and cannot be undone.'
-    );
-    if (!confirmed || isClearing) return;
+  const handleClearChat = () => {
+    setClearError('');
+    setIsClearDialogOpen(true);
+  }
+
+  const handleConfirmClearChat = async () => {
+    if (isClearing) return;
     setIsClearing(true);
+    setClearError('');
     try {
-      const response = await clearChatHistory();
-      alert(response)
+      await clearChatHistory();
+      setIsClearDialogOpen(false);
       loadChatHIstory();
     } catch (error) {
       console.log(error);
-      alert('Could not clear chat history. Please try again later.');
+      setClearError('Could not clear chat history. Please try again later.');
     } finally {
       setIsClearing(false)
     }
@@ -344,6 +349,52 @@ function App() {
                 <p className="order-modal-error">{orderError}</p>
               )}
               {!isOrderLoading && !orderError && <OrderDetails order={orderDetails} />}
+            </div>
+          </section>
+        </div>
+      )}
+      {isClearDialogOpen && (
+        <div
+          className="modal-backdrop"
+          onMouseDown={(event) => {
+            if (!isClearing && event.target === event.currentTarget) {
+              setIsClearDialogOpen(false);
+            }
+          }}
+        >
+          <section
+            className="confirm-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="clear-dialog-title"
+          >
+            <div className="confirm-dialog-header">
+              <p className="eyebrow">Confirmation</p>
+              <h2 id="clear-dialog-title">Clear chat?</h2>
+            </div>
+            <div className="confirm-dialog-body">
+              <p>
+                This will delete the saved chat history and order details. This action cannot be undone.
+              </p>
+              {clearError && <p className="confirm-dialog-error">{clearError}</p>}
+            </div>
+            <div className="confirm-dialog-actions">
+              <button
+                type="button"
+                className="dialog-cancel-button"
+                onClick={() => setIsClearDialogOpen(false)}
+                disabled={isClearing}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="dialog-danger-button"
+                onClick={handleConfirmClearChat}
+                disabled={isClearing}
+              >
+                {isClearing ? 'Clearing...' : 'Clear chat'}
+              </button>
             </div>
           </section>
         </div>
