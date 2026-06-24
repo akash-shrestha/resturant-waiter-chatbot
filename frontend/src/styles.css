@@ -234,8 +234,13 @@ body {
   font-size: 0.9rem;
 }
 
-.confirm-order-button:hover {
+.confirm-order-button:hover:not(:disabled) {
   transform: translateY(-1px)
+}
+
+.confirm-order-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 .modal-backdrop {
@@ -292,9 +297,68 @@ body {
   background: #f6f6ff;
 }
 
+.modal-close-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .order-modal-body {
   overflow-y: auto;
   padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.order-modal-footer {
+  padding: 1rem 1.5rem 1.35rem;
+  border-top: 1px solid #eff1ff;
+}
+
+.order-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.order-confirm-button {
+  min-height: 42px;
+  border: none;
+  border-radius: 999px;
+  padding: 0 1rem;
+  background: #4b4cfd;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.order-confirm-button:hover:not(:disabled) {
+  background: #3f40d9;
+}
+
+.order-confirm-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.order-confirmation-message {
+  margin: 0 0 0.85rem;
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.order-confirmation-message.success {
+  background: #edfdf3;
+  color: #136b35;
+}
+
+.order-confirmation-message.warning {
+  background: #fff7e6;
+  color: #8a5700;
+}
+
+.order-confirmation-message.error {
+  background: #fff1f0;
+  color: #b3261e;
 }
 
 .order-summary-grid {
@@ -612,6 +676,10 @@ body {
     padding: 1rem;
   }
 
+  .order-modal-footer {
+    padding: 1rem;
+  }
+
   .confirm-dialog {
     width: 100%;
     border-radius: 18px 18px 0 0;
@@ -641,8 +709,13 @@ body {
     flex-direction: column-reverse;
   }
 
+  .order-modal-actions {
+    flex-direction: column-reverse;
+  }
+
   .dialog-cancel-button,
-  .dialog-danger-button {
+  .dialog-danger-button,
+  .order-confirm-button {
     width: 100%;
   }
 }

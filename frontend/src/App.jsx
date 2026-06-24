@@ -101,8 +101,11 @@ function App() {
   const [clearError, setClearError] = useState('');
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [isOrderLoading, setIsOrderLoading] = useState(false);
+  const [isConfirmingOrder, setIsConfirmingOrder] = useState(false);
   const [orderDetails, setOrderDetails] = useState(null);
   const [orderError, setOrderError] = useState('');
+  const [orderConfirmationMessage, setOrderConfirmationMessage] = useState('');
+  const [orderConfirmationType, setOrderConfirmationType] = useState('');
   const messagesEndRef = useRef(null);
 
   const loadChatHIstory = useCallback(async () => {
@@ -213,6 +216,8 @@ function App() {
     setIsOrderModalOpen(true);
     setIsOrderLoading(true);
     setOrderError('');
+    setOrderConfirmationMessage('');
+    setOrderConfirmationType('');
     try {
       const response = await getOrder();
       setOrderDetails(response);
@@ -226,18 +231,32 @@ function App() {
   }
 
   const handleConfirmOrder = async () => {
+    handleShowOrder();
+  }
+
+  const handleFinalizeOrderConfirmation = async () => {
+    if (isConfirmingOrder) return;
+    setIsConfirmingOrder(true);
+    setOrderConfirmationMessage('');
+    setOrderConfirmationType('');
     try {
       const response = await getOrder();
+      setOrderDetails(response);
       if (response.status === "ready_for_confirmation") {
-          alert("Order confirmed!");
+        setOrderConfirmationMessage('Order confirmed!');
+        setOrderConfirmationType('success');
       }
       else {
-        alert("Please provide the required details for order completion and proceed")
+        setOrderConfirmationMessage('Please provide the required details for order completion and proceed.');
+        setOrderConfirmationType('warning');
       }
     }
     catch (error) {
       console.log(error)
-      alert('Could not confirm order. Please try again later')
+      setOrderConfirmationMessage('Could not confirm order. Please try again later.');
+      setOrderConfirmationType('error');
+    } finally {
+      setIsConfirmingOrder(false);
     }
   }
 
@@ -273,6 +292,7 @@ function App() {
               type='button'
               onClick={handleConfirmOrder}
               className='confirm-order-button'
+              disabled={isOrderLoading || isConfirmingOrder}
             >
               Confirm order
             </button>
@@ -318,7 +338,7 @@ function App() {
         <div
           className="modal-backdrop"
           onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
+            if (!isConfirmingOrder && event.target === event.currentTarget) {
               setIsOrderModalOpen(false);
             }
           }}
@@ -338,6 +358,7 @@ function App() {
                 type="button"
                 className="modal-close-button"
                 onClick={() => setIsOrderModalOpen(false)}
+                disabled={isConfirmingOrder}
                 aria-label="Close order details"
               >
                 ×
@@ -349,6 +370,31 @@ function App() {
                 <p className="order-modal-error">{orderError}</p>
               )}
               {!isOrderLoading && !orderError && <OrderDetails order={orderDetails} />}
+            </div>
+            <div className="order-modal-footer">
+              {orderConfirmationMessage && (
+                <p className={`order-confirmation-message ${orderConfirmationType}`}>
+                  {orderConfirmationMessage}
+                </p>
+              )}
+              <div className="order-modal-actions">
+                <button
+                  type="button"
+                  className="dialog-cancel-button"
+                  onClick={() => setIsOrderModalOpen(false)}
+                  disabled={isConfirmingOrder}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="order-confirm-button"
+                  onClick={handleFinalizeOrderConfirmation}
+                  disabled={isOrderLoading || isConfirmingOrder || Boolean(orderError)}
+                >
+                  {isConfirmingOrder ? 'Confirming...' : 'Confirm order'}
+                </button>
+              </div>
             </div>
           </section>
         </div>
